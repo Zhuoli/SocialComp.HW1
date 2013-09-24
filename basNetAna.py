@@ -1,4 +1,5 @@
 import math
+import sys
 def file2graph(filename):
 	fr = open(filename)
 	arrayOLines = fr.readlines()
@@ -156,35 +157,34 @@ def getDenominator(E,J,K,edgeList,dictDegree):
 # Radius and diameter
 def radiusAndDiameter(dicVertexs, dicOutDegrees):
   eccs = {}
+  radious = sys.maxint
+  diameter = 0
   for vertex in dicVertexs.keys():
       if hasNeighbours(vertex, dicOutDegrees):
         eccs[vertex] = BFS4maxShortestPath(vertex,dicOutDegrees)
-  radious = sys.maxint
-  diameter = 0
-  for key in eccs.keys():
-    if eccs[key] < radius:
-      radius = ecc[key]
-    if ecc[key] > diameter:
-      diameter == ecc[key]
-  print(" " + radious)
-  print(" " + diameter)
+        if eccs[vertex] < radious:
+          radious = eccs[vertex]
+        if eccs[vertex] > diameter:
+          diameter = eccs[vertex]
+  print("Radius: " + str(radious))
+  print("Diameter: " + str(diameter))
   return
 def hasNeighbours(vertex,dicOutDegrees):
   return (not len(dicOutDegrees[vertex]) == 0)
 def BFS4maxShortestPath(vertex,dicOutDegrees):
   maxShortestPath = 0
-  visited = []
+  visited = [vertex]
   vists = [vertex]
-  while true:
+  while True:
     subvists = []
     for vist in vists:
-      unvisitedNeighbours = getUnvisitedNeighbours(visited,dicOutDegree[vist])
+      unvisitedNeighbours = getUnvisitedNeighbours(visited,dicOutDegrees[vist])
       subvists.extend(unvisitedNeighbours)
       visited.extend(unvisitedNeighbours)
     vists = subvists
-    maxShortestPath += 1
     if len(vists) == 0:
       break
+    maxShortestPath += 1
   return maxShortestPath
 def getUnvisitedNeighbours(visitedList,neighbours):
     unvsNbors = []
