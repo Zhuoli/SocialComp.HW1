@@ -157,38 +157,51 @@ def getDenominator(E,J,K,edgeList,dictDegree):
 # Radius and diameter
 def radiusAndDiameter(dicVertexs, dicOutDegrees):
   eccs = {}
+  shortPaths = {}
   radious = sys.maxint
   diameter = 0
   for vertex in dicVertexs.keys():
       if hasNeighbours(vertex, dicOutDegrees):
-        eccs[vertex] = BFS4maxShortestPath(vertex,dicOutDegrees)
+        eccs[vertex],vertexShortestPaths = BFS4maxShortestPath(vertex,dicOutDegrees)
         if eccs[vertex] < radious:
           radious = eccs[vertex]
         if eccs[vertex] > diameter:
           diameter = eccs[vertex]
+        shortPaths.update(vertexShortestPaths)
   print("Radius: " + str(radious))
   print("Diameter: " + str(diameter))
-  return
+  return shortPaths
 def hasNeighbours(vertex,dicOutDegrees):
   return (not len(dicOutDegrees[vertex]) == 0)
 def BFS4maxShortestPath(vertex,dicOutDegrees):
-  maxShortestPath = 0
+  distance = 0
+  shortestPaths = {}
   visited = [vertex]
   vists = [vertex]
   while True:
     subvists = []
     for vist in vists:
       unvisitedNeighbours = getUnvisitedNeighbours(visited,dicOutDegrees[vist])
+      for each in unvisitedNeighbours:
+        shortestPaths[tuple([vertex,each])] = distance + 1
       subvists.extend(unvisitedNeighbours)
       visited.extend(unvisitedNeighbours)
     vists = subvists
     if len(vists) == 0:
       break
-    maxShortestPath += 1
-  return maxShortestPath
+    distance += 1
+  return distance, shortestPaths
 def getUnvisitedNeighbours(visitedList,neighbours):
     unvsNbors = []
     for neighbour in neighbours:
       if not neighbour in visitedList:
         unvsNbors.append(neighbour)
     return unvsNbors
+#Average path length
+def averagePathLength(shortestPaths):
+  distances = shortestPaths.values()
+  denominator = len(shortestPaths)
+  summ = sum(distances)
+  averagePath = summ / (denominator + 0.000)
+  print("Average path length: %.5f" % averagePath)
+  return

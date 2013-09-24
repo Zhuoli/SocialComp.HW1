@@ -11,3 +11,5 @@ net.averateDegrees(dicInDegree,dicOutDegree,dicVertexs)
 net.coefficient(dicVertexs,dicInDegree,dicOutDegree,edgeList)
 #Assortativity
 net.assortativity(edgeList,dicInDegree,dicOutDegree)
+#Radius and Diameter
+net.radiusAndDiameter(dicVertexs,dicOutDegree)
