@@ -1,0 +1,81 @@
+#!/usr/bin/perl
+
+my $SOLDIR = "/course/cs5750f13/code/solutions/homework1/";
+my $GRAPHDIR = "/course/cs5750f13/data/homework1";
+my $SHELL = "5750netalyzer";
+
+if (! (-e $SHELL)) {
+  error("Unable to find solution '$SHELL'.");
+}
+
+if (! (-e "$SOLDIR$SHELL")) {
+  print("$SOLDIR$SHELL");
+  error("Unable to find reference solution '$SHELL'.");
+}
+
+
+print "BASIC GRAPHS\n";
+my @tries = (	
+"$GRAPHDIR/basic-1.txt",
+"$GRAPHDIR/basic-2.txt",
+"$GRAPHDIR/basic-3.txt",
+"$GRAPHDIR/basic-4.txt"
+);
+test($problem, \@tries);
+
+print "ADVANCED GRAPHS\n";
+my @tries = (	
+"$GRAPHDIR/random-1.txt",
+"$GRAPHDIR/random-2.txt",
+"$GRAPHDIR/random-3.txt",
+"$GRAPHDIR/random-4.txt",
+"$GRAPHDIR/random-5.txt",
+"$GRAPHDIR/lattice-1.txt",
+"$GRAPHDIR/lattice-2.txt",
+"$GRAPHDIR/lattice-3.txt",
+"$GRAPHDIR/scalefree-1.txt",
+"$GRAPHDIR/scalefree-2.txt",
+"$GRAPHDIR/scalefree-3.txt"
+);
+test($problem, \@tries);
+
+sub test {
+  my ($problem, $vals) = @_;
+
+  foreach $val (@{ $vals }) {
+    my $pr = $val;
+    $pr =~ s/\n/\\n/g;
+    print pad("  Graph file: $pr", 70);
+
+    system("$SOLDIR$SHELL $val > .expected 2>&1");
+    system("./$SHELL $val > .actual 2>&1");
+
+    my $diff = `diff .expected .actual | egrep "^([<>]|Binary)"`;
+    `rm .actual .expected`;
+
+    if (! $diff) {
+      print "[PASS]\n";
+    } else {
+      print "[FAIL]\n";
+      print "    Diff in expected output:\n$diff\n";
+    }
+  }
+}
+
+sub error {
+  my ($msg) = @_;
+  print "ERROR: $msg\n";
+  exit(1);
+}
+
+sub pad {
+  my ($name, $len) = @_;
+  while (length($name) < $len) {
+    $name = "$name ";
+  }
+  if (length($name) > $len) {
+    $name = substr($name, 0, $len-3) . "...";
+  }
+  return $name;
+}
+
