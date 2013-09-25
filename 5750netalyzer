@@ -12,4 +12,6 @@ net.coefficient(dicVertexs,dicInDegree,dicOutDegree,edgeList)
 #Assortativity
 net.assortativity(edgeList,dicInDegree,dicOutDegree)
 #Radius and Diameter
-net.radiusAndDiameter(dicVertexs,dicOutDegree)
+shortPaths = net.radiusAndDiameter(dicVertexs,dicOutDegree)
+#Average path length
+net.averagePathLength(shortPaths)

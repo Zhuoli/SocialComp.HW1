@@ -87,7 +87,10 @@ def coefficient(vertexsDic,inDegreeDic,outDegreeDic,edgeList):
 		c = existLinksNum / possibleLinksNum
 		summ += c
 		V += 1
-	c = summ / V
+	if V == 0:
+		c = 0
+	else:
+		c = summ / V
 	#something wrong while coefficient is zero
 	print("Clustering coefficient: %.5f" % c)
 	return
@@ -143,7 +146,10 @@ def getAssortativity(J,K,edgeList,dictDegree):
 		summ += (jiDegree - J) * (kiDegree - K)
 	numerator = summ / E
 	denominator = getDenominator(E,J,K,edgeList,dictDegree)
-	return (numerator / denominator)
+	if numerator == 0:
+		return 0
+	else:
+		return (numerator / denominator)
 def getDenominator(E,J,K,edgeList,dictDegree):
 	sumK = 0.0
 	sumJ = 0.0
