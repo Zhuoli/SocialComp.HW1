@@ -1,15 +1,29 @@
 import math
 import sys
 def file2graph(filename):
-	fr = open(filename)
+	try:
+		fr = open(filename)
+	except:
+		print "Error: Unable to open graph file."
+		exit()
 	arrayOLines = fr.readlines()
 	edgeNumbers = len(arrayOLines)
 	edgeList = []
 	for line in arrayOLines:
 		line = line.strip()
-		listFromLine = line.split('\t');
+		listFromLine = line.split('\t')
 		if(len(listFromLine) == 2):
-			edgeList.append([listFromLine[0],listFromLine[-1]])
+			if [listFromLine[0],listFromLine[-1]] in edgeList:
+				print "Error: Duplicate link on line LINE."
+				exit()	
+			if listFromLine[0] == listFromLine[-1]:
+				print "Error: Self-loop on line LINE."
+				exit()
+			else:
+				edgeList.append([listFromLine[0],listFromLine[-1]])
+		if (not (len(listFromLine) == 2)) and (not (len(listFromLine) == 0)):
+			print "Error: Malformed graph file on line LINE."
+			exit()
 	return edgeList
 
 # Total vertexs and links
@@ -131,8 +145,12 @@ def getAverageDegree(edgeList,dictDegree):
 		summJ += len(dictDegree.get(edge[0]))
 		summK += len(dictDegree.get(edge[1]))
 	E = len(edgeList)
-	J = summJ / E
-	K = summK / E
+	try:
+		J = summJ / E
+		K = summK / E
+	except:
+		print "Error: No vertex in this graph exist!."
+		exit()
 	return J,K
 
 def getAssortativity(J,K,edgeList,dictDegree):
@@ -211,3 +229,11 @@ def averagePathLength(shortestPaths):
   averagePath = summ / (denominator + 0.000)
   print("Average path length: %.5f" % averagePath)
   return
+#Connected components
+def connectedComponent(dicDegrees):
+	size = len(dicDegrees.keys())
+	print("Weakly connected components: " + str(size))
+
+#thanks
+def thanks():
+	print "So long and thanks for all the fish!"
